@@ -1,0 +1,47 @@
+# Logseq agent runner configuration.
+#
+# Copy this file to config.toml (the default), or keep one file per Jira
+# instance and choose it with:  python run.py --config other-jira.toml gather
+# AGENT_RUNNER_CONFIG may also name the file.
+#
+# Paths may use ~ for your home directory. Relative paths resolve against the
+# directory containing this file. On Windows, use forward slashes or single
+# quotes so backslashes are not treated as escapes: 'C:\Users\you\repos'.
+
+[paths]
+logseq_dir = "~/Documents/logseq/personal"   # Logseq graph containing journals/ and pages/
+repos_dir = "~/repos"                        # parent of repositories named by repo::
+work_root = "."                              # run artifacts and worktrees (default: this project)
+
+[tasks]
+# Every tag must appear on a TODO/LATER block's first line, e.g. #agent #client.
+required_tags = ["agent", "client"]
+days = 1                                     # journal days to scan, including today
+
+[jira]
+url = "https://jira.example.com/rest/api/2/" # REST API v2 base URL
+# Bearer token: read from this environment variable first...
+token_env = "JIRA_AUTH_TOKEN"
+# ...then, if the variable is unset, from this file (keep it outside the project).
+# token_file = "~/.config/agent-runner/example-jira.token"
+# Acceptance criteria field id; found automatically when omitted.
+# Run `python run.py jira fields acceptance` to look it up.
+# acceptance_field = "customfield_12345"
+timeout = 30                                 # seconds per HTTP request
+
+[agent]
+command = "claude"                           # Claude Code CLI on PATH
+max_turns = 100
+# allowed_tools replaces the default list (Read, Edit, Write, Glob, Grep and
+# local git add/commit/status/diff/log). extra_allowed_tools adds to it;
+# put your repositories' test commands here.
+extra_allowed_tools = ["Bash(npm test:*)"]
+
+[notify]
+enabled = true                               # desktop notification when execute finishes
+
+[repos]
+# Repository aliases for repo::, repos:: and reference-repos::, and Jira project
+# defaults used when a task names no repository. Relative paths resolve under repos_dir.
+# my-service = "~/repos/my-service"
+# PROJ = "my-service"
